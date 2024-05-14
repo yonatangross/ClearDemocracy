@@ -1,4 +1,5 @@
 ﻿using ClearDemocracy.Knesset.Dal.Context;
+using ClearDemocracy.Knesset.Dal.Models;
 using ClearDemocracy.KnessetService.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -109,10 +110,24 @@ public class PoliticsDal : IPoliticsDal
             .ToListAsync(ct);
     }
 
-    public async Task<IList<Faction>> GetAllFactions(CancellationToken ct = default)
+    public async Task<IList<KnessetService.Models.Faction>> GetAllFactions(CancellationToken ct = default)
     {
         return await _context.Factions
-            .Select(faction => new Faction
+            .Select(faction => new Models.Faction
+            {
+                Id = faction.Id,
+                KnessetId = faction.KnessetId,
+                IsPartial = faction.IsPartial,
+                Name = faction.Name
+            })
+            .ToListAsync(ct);
+    }
+
+    public async Task<IList<KnessetService.Models.Faction>> GetFactions(IList<int> ids, CancellationToken ct = default)
+    {
+        return await _context.Factions
+            .Where(faction => ids.Contains(faction.Id))
+            .Select(faction => new KnessetService.Models.Faction
             {
                 ID = faction.Id,
                 KnessetID = faction.KnessetId.ToString(),
@@ -122,23 +137,42 @@ public class PoliticsDal : IPoliticsDal
             .ToListAsync(ct);
     }
 
-    public async Task<IList<Faction>> GetFactions(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<Models.Knesset>> GetKnessets(IList<int> ids, CancellationToken ct = default)
     {
-        return await _context.Factions
-            .Where(faction => ids.Contains(faction.Id))
-            .Select(faction => new Faction
+        return await _context.Knessets
+            .Where(knesset => ids.Contains(knesset.Id))
+            .Select(knesset => new Models.Knesset
             {
-                ID = faction.Id,
-                KnessetID = faction.KnessetId.ToString(),
-                IsPartial = faction.IsPartial,
-                Name = faction.Name
+                Id = knesset.Id,
+                Name = knesset.Name,
+                FromDate = knesset.FromDate,
+                ToDate = knesset.ToDate,
+                FromDateHeb = knesset.FromDateHeb,
+                ToDateHeb = knesset.ToDateHeb,
+                IsCurrent = knesset.IsCurrent
+            })
+            .ToListAsync(ct);
+    }
+
+    public async Task<IList<Models.Knesset>> GetAllKnessets(CancellationToken ct = default)
+    {
+        return await _context.Knessets
+            .Select(knesset => new Models.Knesset
+            {
+                Id = knesset.Id,
+                Name = knesset.Name,
+                FromDate = knesset.FromDate,
+                ToDate = knesset.ToDate,
+                FromDateHeb = knesset.FromDateHeb,
+                ToDateHeb = knesset.ToDateHeb,
+                IsCurrent = knesset.IsCurrent
             })
             .ToListAsync(ct);
     }
 
     public async Task<IList<MK>> AddMks(IList<MK> mks, CancellationToken ct = default)
     {
-        var dbMks = mks.Select(mk => new Models.Mk
+        var dbMks = mks.Select(mk => new Mk
         {
             MkId = mk.MkId,
             Email = mk.Email,
@@ -208,7 +242,7 @@ public class PoliticsDal : IPoliticsDal
         return ids;
     }
 
-    public async Task<IList<Faction>> InitFactions(IList<Faction> factions, CancellationToken ct = default)
+    public async Task<IList<Models.Faction>> InitFactions(IList<Models.Faction> factions, CancellationToken ct = default)
     {
         if (factions == null || !factions.Any())
         {
@@ -217,8 +251,8 @@ public class PoliticsDal : IPoliticsDal
 
         var dbFactions = factions.Select(faction => new Models.Faction
         {
-            Id = faction.ID,
-            KnessetId = int.Parse(faction.KnessetID),
+            Id = faction.Id,
+            KnessetId = faction.KnessetId,
             IsPartial = faction.IsPartial,
             Name = faction.Name
         });
@@ -314,12 +348,12 @@ public class PoliticsDal : IPoliticsDal
             .ToListAsync(ct);
     }
 
-    public async Task<IList<Faction>> AddFactions(IList<Faction> factions, CancellationToken ct = default)
+    public async Task<IList<Models.Faction>> AddFactions(IList<Models.Faction> factions, CancellationToken ct = default)
     {
         var dbFactions = factions.Select(faction => new Models.Faction
         {
-            Id = faction.ID,
-            KnessetId = int.Parse(faction.KnessetID),
+            Id = faction.Id,
+            KnessetId = faction.KnessetId,
             IsPartial = faction.IsPartial,
             Name = faction.Name
         });
@@ -330,14 +364,14 @@ public class PoliticsDal : IPoliticsDal
         return factions;
     }
 
-    public async Task<IList<Faction>> UpdateFactions(IList<Faction> factions, CancellationToken ct = default)
+    public async Task<IList<Models.Faction>> UpdateFactions(IList<Models.Faction> factions, CancellationToken ct = default)
     {
         foreach (var faction in factions)
         {
             var dbFaction = new Models.Faction
             {
-                Id = faction.ID,
-                KnessetId = int.Parse(faction.KnessetID),
+                Id = faction.Id,
+                KnessetId = faction.KnessetId,
                 IsPartial = faction.IsPartial,
                 Name = faction.Name
             };
@@ -423,5 +457,65 @@ public class PoliticsDal : IPoliticsDal
         }
 
         return ids;
+    }
+
+    public async Task<IList<KnessetService.Models.Faction>> InitFactions(IList<KnessetService.Models.Faction> factions, CancellationToken ct = default)
+    {
+        var dbFactions = factions.Select(faction => new Models.Faction
+        {
+            Id = faction.ID,
+            KnessetId = int.Parse(faction.KnessetID),
+            IsPartial = faction.IsPartial,
+            Name = faction.Name
+        });
+
+        foreach (var faction in dbFactions)
+        {
+            var existingFaction = await _context.Factions.FindAsync([faction.Id], ct);
+            if (existingFaction != null)
+            {
+                // Update the existing entity
+                _context.Entry(existingFaction).CurrentValues.SetValues(faction);
+            }
+            else
+            {
+                // Add the new entity
+                await _context.Factions.AddAsync(faction, ct);
+            }
+        }
+
+        await _context.SaveChangesAsync(ct);
+        return factions;
+    }
+
+    public async Task<IList<KnessetService.Models.Faction>> AddFactions(IList<KnessetService.Models.Faction> factions, CancellationToken ct = default)
+    {
+        var dbFactions = factions.Select(faction => new Models.Faction
+        {
+            Id = faction.ID,
+            KnessetId = int.Parse(faction.KnessetID),
+            IsPartial = faction.IsPartial,
+            Name = faction.Name
+        });
+
+        await _context.Factions.AddRangeAsync(dbFactions, ct);
+        await _context.SaveChangesAsync(ct);
+
+        return factions;
+    }
+
+    public async Task<IList<KnessetService.Models.Faction>> UpdateFactions(IList<KnessetService.Models.Faction> factions, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<IList<KnessetService.Models.Faction>> IPoliticsDal.GetAllFactions(CancellationToken ct)
+    {
+        throw new NotImplementedException();
+    }
+
+    Task<IList<KnessetService.Models.Faction>> IPoliticsDal.GetFactions(IList<int> ids, CancellationToken ct)
+    {
+        throw new NotImplementedException();
     }
 }

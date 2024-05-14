@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ClearDemocracy.Knesset.Dal\ClearDemocracy.Knesset.Dal.csproj" />
-    <ProjectReference Include="..\ClearDemocracy.KnessetService\ClearDemocracy.KnessetService.csproj" />
+    <ProjectReference Include="..\ClearDemocracy.KnessetService\ClearDemocracy.KnessetService.Api.csproj" />
   </ItemGroup>
 
 </Project>

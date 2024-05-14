@@ -37,7 +37,7 @@ public partial class KnessetContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("factions");
+            entity.ToTable("faction");
 
             entity.HasIndex(e => e.KnessetId, "KnessetID");
 
@@ -52,14 +52,14 @@ public partial class KnessetContext : DbContext
             entity.HasOne(d => d.Knesset).WithMany(p => p.Factions)
                 .HasForeignKey(d => d.KnessetId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("factions_ibfk_1");
+                .HasConstraintName("faction_ibfk_1");
         });
 
         modelBuilder.Entity<Models.Knesset>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("knessets");
+            entity.ToTable("knesset");
 
             entity.Property(e => e.Id)
                 .ValueGeneratedNever()
@@ -79,7 +79,7 @@ public partial class KnessetContext : DbContext
         {
             entity.HasKey(e => e.MkId).HasName("PRIMARY");
 
-            entity.ToTable("mks");
+            entity.ToTable("mk");
 
             entity.Property(e => e.MkId).ValueGeneratedNever();
             entity.Property(e => e.Email).HasMaxLength(255);
