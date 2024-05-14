@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ClearDemocracy.KnesserService\ClearDemocracy.KnessetService.csproj" />
+    <ProjectReference Include="..\ClearDemocracy.Knesset.Dal\ClearDemocracy.Knesset.Dal.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34728.123
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClearDemocracy.Politics.WebAPI", "ClearDemocracy.DataService.API\ClearDemocracy.Politics.WebAPI.csproj", "{2632BDB5-FA4D-4D36-B240-49DD7CCC0D7F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ClearDemocracy.KnessetService", "ClearDemocracy.KnesserService\ClearDemocracy.KnessetService.csproj", "{DA292324-B195-4661-AC2D-C1BC2B620BB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearDemocracy.Knesset.BL", "ClearDemocracy.Knesset.BL\ClearDemocracy.Knesset.BL.csproj", "{6232B85D-244E-4A30-9F50-3FCE907137B6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ClearDemocracy.Knesset.Dal", "ClearDemocracy.Knesset.Dal\ClearDemocracy.Knesset.Dal.csproj", "{B17E1069-E45C-43CF-9579-E21696E57FB2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2632BDB5-FA4D-4D36-B240-49DD7CCC0D7F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2632BDB5-FA4D-4D36-B240-49DD7CCC0D7F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2632BDB5-FA4D-4D36-B240-49DD7CCC0D7F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2632BDB5-FA4D-4D36-B240-49DD7CCC0D7F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA292324-B195-4661-AC2D-C1BC2B620BB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA292324-B195-4661-AC2D-C1BC2B620BB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA292324-B195-4661-AC2D-C1BC2B620BB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA292324-B195-4661-AC2D-C1BC2B620BB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6232B85D-244E-4A30-9F50-3FCE907137B6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6232B85D-244E-4A30-9F50-3FCE907137B6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6232B85D-244E-4A30-9F50-3FCE907137B6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6232B85D-244E-4A30-9F50-3FCE907137B6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B17E1069-E45C-43CF-9579-E21696E57FB2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B17E1069-E45C-43CF-9579-E21696E57FB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B17E1069-E45C-43CF-9579-E21696E57FB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B17E1069-E45C-43CF-9579-E21696E57FB2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {458AAFA4-D922-46D7-A47A-E4CF57B706CA}
+	EndGlobalSection
+EndGlobal
