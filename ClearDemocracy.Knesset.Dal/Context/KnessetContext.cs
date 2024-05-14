@@ -1,5 +1,8 @@
-﻿using ClearDemocracy.Knesset.Dal.Models;
+﻿using System;
+using System.Collections.Generic;
+using ClearDemocracy.Knesset.Dal.Models;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace ClearDemocracy.Knesset.Dal.Context;
 
@@ -14,6 +17,10 @@ public partial class KnessetContext : DbContext
     {
     }
 
+    public virtual DbSet<Faction> Factions { get; set; }
+
+    public virtual DbSet<Models.Knesset> Knessets { get; set; }
+
     public virtual DbSet<Mk> Mks { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -25,6 +32,48 @@ public partial class KnessetContext : DbContext
         modelBuilder
             .UseCollation("utf8mb4_0900_ai_ci")
             .HasCharSet("utf8mb4");
+
+        modelBuilder.Entity<Faction>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("factions");
+
+            entity.HasIndex(e => e.KnessetId, "KnessetID");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.KnessetId).HasColumnName("KnessetID");
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+
+            entity.HasOne(d => d.Knesset).WithMany(p => p.Factions)
+                .HasForeignKey(d => d.KnessetId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("factions_ibfk_1");
+        });
+
+        modelBuilder.Entity<Models.Knesset>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("knessets");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("ID");
+            entity.Property(e => e.FromDate).HasColumnType("datetime");
+            entity.Property(e => e.FromDateHeb)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.Name)
+                .IsRequired()
+                .HasMaxLength(255);
+            entity.Property(e => e.ToDate).HasColumnType("datetime");
+            entity.Property(e => e.ToDateHeb).HasMaxLength(255);
+        });
 
         modelBuilder.Entity<Mk>(entity =>
         {

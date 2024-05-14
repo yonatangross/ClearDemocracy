@@ -37,11 +37,12 @@ public class Program
         // Swagger/OpenAPI support
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddKnessetDal(configuration);
+        services.AddKnessetBl();
         services.AddKnessetService();
         // HTTP client service for external API calls
         services.AddHttpClient<KnessetApi>();
-        services.AddKnessetBl();
-        services.AddKnessetDal(configuration);
+
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(

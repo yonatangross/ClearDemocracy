@@ -51,7 +51,7 @@ public class KnessetRetriever : IKnessetRetriever
         try
         {
             _logger.LogInformation("Retrieving factions from DAL...");
-            var factions = await _politicsDal.GetFactions(ct);
+            var factions = await _politicsDal.GetAllFactions(ct);
             return factions;
         }
         catch (Exception ex)
@@ -66,7 +66,7 @@ public class KnessetRetriever : IKnessetRetriever
         try
         {
             _logger.LogInformation("Retrieving factions by IDs from DAL...");
-            var factions = await _politicsDal.GetFactionsByIds(ids, ct);
+            var factions = await _politicsDal.GetFactions(ids, ct);
             return factions;
         }
         catch (Exception ex)
@@ -81,7 +81,7 @@ public class KnessetRetriever : IKnessetRetriever
         try
         {
             _logger.LogInformation("Retrieving knessets from DAL...");
-            var knessets = await _politicsDal.GetKnessets(ct);
+            var knessets = await _politicsDal.GetAllKnessets(ct);
             return knessets;
         }
         catch (Exception ex)
@@ -96,7 +96,7 @@ public class KnessetRetriever : IKnessetRetriever
         try
         {
             _logger.LogInformation("Retrieving knessets by IDs from DAL...");
-            var knessets = await _politicsDal.GetKnessetsByIds(ids, ct);
+            var knessets = await _politicsDal.GetKnessets(ids, ct);
             return knessets;
         }
         catch (Exception ex)

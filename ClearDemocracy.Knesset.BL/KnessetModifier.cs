@@ -36,7 +36,7 @@ public class KnessetModifier : IKnessetModifier
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while initializing factions");
-            throw;
+            throw; // rethrow the exception if you want it to be handled further up the call stack
         }
     }
 
@@ -57,7 +57,7 @@ public class KnessetModifier : IKnessetModifier
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while initializing Knessets");
-            throw;
+            throw; // rethrow the exception if you want it to be handled further up the call stack
         }
     }
 
@@ -79,7 +79,7 @@ public class KnessetModifier : IKnessetModifier
         catch (Exception ex)
         {
             _logger.LogError(ex, "An error occurred while initializing MKs");
-            throw;
+            throw; // rethrow the exception if you want it to be handled further up the call stack
         }
     }
 
@@ -130,7 +130,7 @@ public class KnessetModifier : IKnessetModifier
         try
         {
             _logger.LogInformation("Retrieving factions from DAL...");
-            var factions = await _politicsDal.GetFactions(ct);
+            var factions = await _politicsDal.GetAllFactions(ct);
             return factions;
         }
         catch (Exception ex)
@@ -220,6 +220,21 @@ public class KnessetModifier : IKnessetModifier
         catch (Exception ex)
         {
             _logger.LogError(ex, "Error occurred while deleting Knessets.");
+            throw;
+        }
+    }
+
+    public async Task<IList<KnessetService.Models.Knesset>> GetKnessets(CancellationToken ct = default)
+    {
+        try
+        {
+            _logger.LogInformation("Retrieving Knessets from DAL...");
+            var knessets = await _politicsDal.GetAllKnessets(ct);
+            return knessets;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error occurred while getting Knessets.");
             throw;
         }
     }

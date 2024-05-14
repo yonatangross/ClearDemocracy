@@ -7,13 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ClearDemocracy.Knesset.BL.DependencyInjections
-{
+namespace ClearDemocracy.Knesset.BL.DependencyInjections;
+
 public static class DependencyInjectionsExtensions
+{
+    public static void AddKnessetService(this IServiceCollection services)
     {
-        public static void AddKnessetService(this IServiceCollection services)
-        {
-            services.AddSingleton<IKnessetApi, KnessetApi>();
-        }
+        services.AddSingleton<IKnessetApi, KnessetApi>();
     }
 }

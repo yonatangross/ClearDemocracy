@@ -45,7 +45,7 @@ public class PoliticsDal : IPoliticsDal
 
         foreach (var mk in dbMks)
         {
-            var existingMk = await _context.Mks.FindAsync(new object[] { mk.MkId }, ct);
+            var existingMk = await _context.Mks.FindAsync([mk.MkId], ct);
             if (existingMk != null)
             {
                 // Update the existing entity
@@ -109,18 +109,34 @@ public class PoliticsDal : IPoliticsDal
             .ToListAsync(ct);
     }
 
-    public async Task<IList<Faction>> GetFactions(CancellationToken ct = default)
+    public async Task<IList<Faction>> GetAllFactions(CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return await _context.Factions
+            .Select(faction => new Faction
+            {
+                ID = faction.Id,
+                KnessetID = faction.KnessetId.ToString(),
+                IsPartial = faction.IsPartial,
+                Name = faction.Name
+            })
+            .ToListAsync(ct);
     }
 
-    public async Task<IList<Faction>> GetFactionsByIds(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<Faction>> GetFactions(IList<int> ids, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
-        //return await _context.Factions.Where(faction => ids.Contains(faction.FactionId)).ToListAsync(ct);
+        return await _context.Factions
+            .Where(faction => ids.Contains(faction.Id))
+            .Select(faction => new Faction
+            {
+                ID = faction.Id,
+                KnessetID = faction.KnessetId.ToString(),
+                IsPartial = faction.IsPartial,
+                Name = faction.Name
+            })
+            .ToListAsync(ct);
     }
 
-    public async Task AddMks(IList<MK> mks, CancellationToken ct = default)
+    public async Task<IList<MK>> AddMks(IList<MK> mks, CancellationToken ct = default)
     {
         var dbMks = mks.Select(mk => new Models.Mk
         {
@@ -142,9 +158,11 @@ public class PoliticsDal : IPoliticsDal
 
         await _context.Mks.AddRangeAsync(dbMks, ct);
         await _context.SaveChangesAsync(ct);
+
+        return mks;
     }
 
-    public async Task UpdateMks(IList<MK> mks, CancellationToken ct = default)
+    public async Task<IList<MK>> UpdateMks(IList<MK> mks, CancellationToken ct = default)
     {
         foreach (var mk in mks)
         {
@@ -166,7 +184,7 @@ public class PoliticsDal : IPoliticsDal
                 Youtube = mk.Youtube
             };
 
-            var existingMk = await _context.Mks.FindAsync(new object[] { dbMk.MkId }, ct);
+            var existingMk = await _context.Mks.FindAsync([dbMk.MkId], ct);
             if (existingMk != null)
             {
                 // Update the existing entity
@@ -174,9 +192,11 @@ public class PoliticsDal : IPoliticsDal
             }
         }
         await _context.SaveChangesAsync(ct);
+
+        return mks;
     }
 
-    public async Task DeleteMks(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<int>> DeleteMks(IList<int> ids, CancellationToken ct = default)
     {
         var mks = await _context.Mks.Where(mk => ids.Contains(mk.MkId)).ToListAsync(ct);
         if (mks != null && mks.Count > 0)
@@ -184,55 +204,224 @@ public class PoliticsDal : IPoliticsDal
             _context.Mks.RemoveRange(mks);
             await _context.SaveChangesAsync(ct);
         }
+
+        return ids;
     }
 
     public async Task<IList<Faction>> InitFactions(IList<Faction> factions, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        if (factions == null || !factions.Any())
+        {
+            throw new ArgumentException("The factions list cannot be null or empty.");
+        }
+
+        var dbFactions = factions.Select(faction => new Models.Faction
+        {
+            Id = faction.ID,
+            KnessetId = int.Parse(faction.KnessetID),
+            IsPartial = faction.IsPartial,
+            Name = faction.Name
+        });
+
+        foreach (var faction in dbFactions)
+        {
+            var existingFaction = await _context.Factions.FindAsync([faction.Id], ct);
+            if (existingFaction != null)
+            {
+                // Update the existing entity
+                _context.Entry(existingFaction).CurrentValues.SetValues(faction);
+            }
+            else
+            {
+                // Add the new entity
+                await _context.Factions.AddAsync(faction, ct);
+            }
+        }
+
+        await _context.SaveChangesAsync(ct);
+        return factions;
     }
 
     public async Task<IList<KnessetService.Models.Knesset>> InitKnessets(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        if (knessets == null || !knessets.Any())
+        {
+            throw new ArgumentException("The knessets list cannot be null or empty.");
+        }
+
+        var dbKnessets = knessets.Select(knesset => new Models.Knesset
+        {
+            Id = knesset.ID,
+            Name = knesset.Name,
+            FromDate = knesset.FromDate,
+            ToDate = knesset.ToDate,
+            FromDateHeb = knesset.FromDateHeb,
+            ToDateHeb = knesset.ToDateHeb,
+            IsCurrent = knesset.IsCurrent
+
+        });
+
+        foreach (var knesset in dbKnessets)
+        {
+            var existingKnesset = await _context.Knessets.FindAsync([knesset.Id], ct);
+            if (existingKnesset != null)
+            {
+                // Update the existing entity
+                _context.Entry(existingKnesset).CurrentValues.SetValues(knesset);
+            }
+            else
+            {
+                // Add the new entity
+                await _context.Knessets.AddAsync(knesset, ct);
+            }
+        }
+
+        await _context.SaveChangesAsync(ct);
+        return knessets;
+
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> GetKnessets(CancellationToken ct = default)
+    public async Task<IList<KnessetService.Models.Knesset>> GetAllKnessets(CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return await _context.Knessets
+            .Select(knesset => new KnessetService.Models.Knesset
+            {
+                ID = knesset.Id,
+                Name = knesset.Name,
+                FromDate = knesset.FromDate,
+                ToDate = knesset.ToDate,
+                FromDateHeb = knesset.FromDateHeb,
+                ToDateHeb = knesset.ToDateHeb,
+                IsCurrent = knesset.IsCurrent
+            })
+            .ToListAsync(ct);
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> GetKnessetsByIds(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<KnessetService.Models.Knesset>> GetKnessets(IList<int> ids, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        return await _context.Knessets
+            .Where(knesset => ids.Contains(knesset.Id))
+            .Select(knesset => new KnessetService.Models.Knesset
+            {
+                ID = knesset.Id,
+                Name = knesset.Name,
+                FromDate = knesset.FromDate,
+                ToDate = knesset.ToDate,
+                FromDateHeb = knesset.FromDateHeb,
+                ToDateHeb = knesset.ToDateHeb,
+                IsCurrent = knesset.IsCurrent
+            })
+            .ToListAsync(ct);
     }
 
-    public async Task AddFactions(IList<Faction> factions, CancellationToken ct = default)
+    public async Task<IList<Faction>> AddFactions(IList<Faction> factions, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var dbFactions = factions.Select(faction => new Models.Faction
+        {
+            Id = faction.ID,
+            KnessetId = int.Parse(faction.KnessetID),
+            IsPartial = faction.IsPartial,
+            Name = faction.Name
+        });
+
+        await _context.Factions.AddRangeAsync(dbFactions, ct);
+        await _context.SaveChangesAsync(ct);
+
+        return factions;
     }
 
-    public async Task UpdateFactions(IList<Faction> factions, CancellationToken ct = default)
+    public async Task<IList<Faction>> UpdateFactions(IList<Faction> factions, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        foreach (var faction in factions)
+        {
+            var dbFaction = new Models.Faction
+            {
+                Id = faction.ID,
+                KnessetId = int.Parse(faction.KnessetID),
+                IsPartial = faction.IsPartial,
+                Name = faction.Name
+            };
+
+            var existingFaction = await _context.Factions.FindAsync([dbFaction.Id], ct);
+            if (existingFaction != null)
+            {
+                // Update the existing entity
+                _context.Entry(existingFaction).CurrentValues.SetValues(dbFaction);
+            }
+        }
+        await _context.SaveChangesAsync(ct);
+
+        return factions;
     }
 
-    public async Task DeleteFactions(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<int>> DeleteFactions(IList<int> ids, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var factions = await _context.Factions.Where(faction => ids.Contains(faction.Id)).ToListAsync(ct);
+        if (factions != null && factions.Count > 0)
+        {
+            _context.Factions.RemoveRange(factions);
+            await _context.SaveChangesAsync(ct);
+        }
+
+        return ids;
     }
 
-    public async Task AddKnessets(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
+    public async Task<IList<KnessetService.Models.Knesset>> AddKnessets(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var dbKnessets = knessets.Select(knesset => new Models.Knesset
+        {
+            Id = knesset.ID,
+            Name = knesset.Name,
+            FromDate = knesset.FromDate,
+            ToDate = knesset.ToDate,
+            FromDateHeb = knesset.FromDateHeb,
+            ToDateHeb = knesset.ToDateHeb,
+            IsCurrent = knesset.IsCurrent
+        });
+
+        await _context.Knessets.AddRangeAsync(dbKnessets, ct);
+        await _context.SaveChangesAsync(ct);
+
+        return knessets;
+
     }
 
-    public async Task UpdateKnessets(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
+    public async Task<IList<KnessetService.Models.Knesset>> UpdateKnessets(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        foreach (var knesset in knessets)
+        {
+            var dbKnesset = new Models.Knesset
+            {
+                Id = knesset.ID,
+                Name = knesset.Name,
+                FromDate = knesset.FromDate,
+                ToDate = knesset.ToDate,
+                FromDateHeb = knesset.FromDateHeb,
+                ToDateHeb = knesset.ToDateHeb,
+                IsCurrent = knesset.IsCurrent
+            };
+
+            var existingKnesset = await _context.Knessets.FindAsync([dbKnesset.Id], ct);
+            if (existingKnesset != null)
+            {
+                // Update the existing entity
+                _context.Entry(existingKnesset).CurrentValues.SetValues(dbKnesset);
+            }
+        }
+        await _context.SaveChangesAsync(ct);
+
+        return knessets;
     }
 
-    public async Task DeleteKnessets(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<int>> DeleteKnessets(IList<int> ids, CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var knessets = await _context.Knessets.Where(knesset => ids.Contains(knesset.Id)).ToListAsync(ct);
+        if (knessets != null && knessets.Count > 0)
+        {
+            _context.Knessets.RemoveRange(knessets);
+            await _context.SaveChangesAsync(ct);
+        }
+
+        return ids;
     }
 }
