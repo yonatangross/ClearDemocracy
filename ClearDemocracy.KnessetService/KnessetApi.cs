@@ -71,9 +71,31 @@ public class KnessetApi : IKnessetApi
         }
     }
 
-    public Task<IList<Knesset>> GetKnessets(CancellationToken ct = default)
+    public async Task<IList<Models.Knesset>> GetKnessets(CancellationToken ct = default)
     {
-        throw new NotImplementedException();
+        var stringUrl = "https://knesset.gov.il/WebSiteApi/knessetapi/Faction/GetFactions?lng=en";
+        try
+        {
+            var response = await _httpClient.GetAsync(stringUrl, ct);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync(ct);
+                var result = JsonSerializer.Deserialize<FactionsRoot>(responseString);
+
+                return result.Knessets;
+            }
+            else
+            {
+                _logger.LogError($"Failed to retrieve data from {stringUrl}. Status code: {response.StatusCode}");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occurred while retrieving data: {ex.Message}");
+            return null;
+        }
     }
 }
 

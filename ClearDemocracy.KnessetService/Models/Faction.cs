@@ -1,6 +1,5 @@
 ﻿namespace ClearDemocracy.KnessetService.Models;
 
-// Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
 public class Faction
 {
     public int ID { get; set; }

@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace ClearDemocracy.KnessetService.Models;
+﻿namespace ClearDemocracy.KnessetService.Models;
 
 public class Knesset
 {

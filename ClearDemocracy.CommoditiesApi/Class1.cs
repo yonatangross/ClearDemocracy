@@ -1,7 +1,6 @@
-﻿namespace ClearDemocracy.CommoditiesApi
-{
-    public class Class1
-    {
+﻿namespace ClearDemocracy.CommoditiesApi;
 
-    }
+public class Class1
+{
+
 }

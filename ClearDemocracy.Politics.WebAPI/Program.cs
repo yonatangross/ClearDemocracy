@@ -1,7 +1,9 @@
 using ClearDemocracy.Knesset.BL;
 using ClearDemocracy.Knesset.BL.Abstractions;
+using ClearDemocracy.Knesset.BL.DependencyInjections;
 using ClearDemocracy.Knesset.Dal;
 using ClearDemocracy.Knesset.Dal.Context;
+using ClearDemocracy.Knesset.Dal.DependencyInjections;
 using ClearDemocracy.KnessetService;
 using ClearDemocracy.KnessetService.Abstractions;
 using Microsoft.AspNetCore.Builder;
@@ -35,19 +37,11 @@ public class Program
         // Swagger/OpenAPI support
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.AddKnessetService();
         // HTTP client service for external API calls
         services.AddHttpClient<KnessetApi>();
-        // Singleton instance for KnessetApi
-        services.AddSingleton<IKnessetApi, KnessetApi>();
-        services.AddSingleton<IKnessetModifier, KnessetModifier>();
-        services.AddDbContext<KnessetContext>(options =>
-            {
-                options.UseMySql(
-                 configuration.GetConnectionString("politics"),
-                 ServerVersion.AutoDetect(configuration.GetConnectionString("politics")));
-            }, ServiceLifetime.Singleton);
-        services.AddSingleton<IPoliticsDal, PoliticsDal>();
-        // Default CORS policy configuration
+        services.AddKnessetBl();
+        services.AddKnessetDal(configuration);
         services.AddCors(options =>
         {
             options.AddDefaultPolicy(
