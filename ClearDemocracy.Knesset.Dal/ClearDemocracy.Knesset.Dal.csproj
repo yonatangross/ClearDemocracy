@@ -5,20 +5,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="MySql.Data" Version="8.4.0" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="8.0.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClearDemocracy.KnesserService\ClearDemocracy.KnessetService.csproj" />
+    <Folder Include="Context\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Context\" />
+    <ProjectReference Include="..\ClearDemocracy.KnessetService\ClearDemocracy.KnessetService.csproj" />
   </ItemGroup>
 
 </Project>

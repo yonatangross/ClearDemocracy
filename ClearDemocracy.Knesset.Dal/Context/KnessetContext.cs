@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using ClearDemocracy.Knesset.Dal.Models;
+﻿using ClearDemocracy.Knesset.Dal.Models;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace ClearDemocracy.Knesset.Dal.Context;
 
@@ -47,7 +44,7 @@ public partial class KnessetContext : DbContext
             entity.Property(e => e.ImagePath).HasMaxLength(255);
             entity.Property(e => e.Instagram).HasMaxLength(255);
             entity.Property(e => e.Lastname).HasMaxLength(100);
-            entity.Property(e => e.Phone).HasMaxLength(20);
+            entity.Property(e => e.Phone).HasMaxLength(100);
             entity.Property(e => e.Twitter).HasMaxLength(255);
             entity.Property(e => e.WebsiteUrl).HasMaxLength(255);
             entity.Property(e => e.Youtube).HasMaxLength(255);

@@ -2,11 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+	      <ImplicitUsings>enable</ImplicitUsings>
+	  <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ClearDemocracy.KnesserService\ClearDemocracy.KnessetService.csproj" />
     <ProjectReference Include="..\ClearDemocracy.Knesset.Dal\ClearDemocracy.Knesset.Dal.csproj" />
+    <ProjectReference Include="..\ClearDemocracy.KnessetService\ClearDemocracy.KnessetService.csproj" />
   </ItemGroup>
 
 </Project>
