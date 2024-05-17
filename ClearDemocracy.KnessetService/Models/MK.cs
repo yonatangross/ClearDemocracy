@@ -1,4 +1,4 @@
-﻿namespace ClearDemocracy.KnessetService.Models;
+﻿namespace ClearDemocracy.KnessetService.Api.Models;
 
 public class MK
 {

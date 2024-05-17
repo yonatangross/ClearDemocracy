@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClearDemocracy.Knesset.Dal.Models;
 
-public partial class Knesset
+public partial class knesset
 {
     public int Id { get; set; }
 
@@ -19,5 +19,5 @@ public partial class Knesset
 
     public bool IsCurrent { get; set; }
 
-    public virtual ICollection<Faction> Factions { get; set; } = new List<Faction>();
+    public virtual ICollection<faction> Factions { get; set; } = new List<faction>();
 }

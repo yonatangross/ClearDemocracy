@@ -1,13 +1,9 @@
-using ClearDemocracy.Knesset.BL;
-using ClearDemocracy.Knesset.BL.Abstractions;
 using ClearDemocracy.Knesset.BL.DependencyInjections;
-using ClearDemocracy.Knesset.Dal;
-using ClearDemocracy.Knesset.Dal.Context;
 using ClearDemocracy.Knesset.Dal.DependencyInjections;
-using ClearDemocracy.KnessetService;
-using ClearDemocracy.KnessetService.Abstractions;
+using ClearDemocracy.KnessetService.Api;
+using ClearDemocracy.KnessetService.Api.DependencyInjections;
+using ClearDemocracy.KnessetService.Api.Options;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +33,8 @@ public class Program
         // Swagger/OpenAPI support
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
+        services.Configure<QueryOptions>(configuration.GetSection("QueryOptions"));
+        services.AddOptions<QueryOptions>();
         services.AddKnessetDal(configuration);
         services.AddKnessetBl();
         services.AddKnessetService();

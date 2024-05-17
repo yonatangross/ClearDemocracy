@@ -1,6 +1,6 @@
 ﻿using ClearDemocracy.Knesset.BL.Abstractions;
 using ClearDemocracy.Knesset.Dal;
-using ClearDemocracy.KnessetService.Models;
+using ClearDemocracy.KnessetService.Api.Models;
 using Microsoft.Extensions.Logging;
 
 namespace ClearDemocracy.Knesset.BL;
@@ -76,7 +76,7 @@ public class KnessetRetriever : IKnessetRetriever
         }
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> GetKnessetsAsync(CancellationToken ct = default)
+    public async Task<IList<KnessetService.Api.Models.Knesset>> GetKnessetsAsync(CancellationToken ct = default)
     {
         try
         {
@@ -91,7 +91,7 @@ public class KnessetRetriever : IKnessetRetriever
         }
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> GetKnessetsByIdsAsync(IList<int> ids, CancellationToken ct = default)
+    public async Task<IList<KnessetService.Api.Models.Knesset>> GetKnessetsByIdsAsync(IList<int> ids, CancellationToken ct = default)
     {
         try
         {
@@ -104,5 +104,40 @@ public class KnessetRetriever : IKnessetRetriever
             _logger.LogError(ex, "Error occurred while getting knessets by IDs.");
             throw;
         }
+    }
+
+    public Task<GovernmentRoot> GetGovernmentRootsAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<Government>> GetGovernmentsAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<Government>> GetGovernmentsByIdsAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<Minister>> GetMinistersAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<Minister>> GetMinistersByIdsAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<MinisterLastPosition>> GetMinisterLastPositionsAsync(CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task<IList<MinisterLastPosition>> GetMinisterLastPositionsByIdsAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
     }
 }

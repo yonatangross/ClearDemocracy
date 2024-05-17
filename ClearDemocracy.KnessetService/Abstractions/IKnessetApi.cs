@@ -1,6 +1,6 @@
-﻿using ClearDemocracy.KnessetService.Models;
+﻿using ClearDemocracy.KnessetService.Api.Models;
 
-namespace ClearDemocracy.KnessetService.Abstractions;
+namespace ClearDemocracy.KnessetService.Api.Abstractions;
 
 public interface IKnessetApi
 {
@@ -8,5 +8,7 @@ public interface IKnessetApi
 
     Task<IList<Faction>> GetFactions(CancellationToken ct = default);
 
-    Task<IList<Models.Knesset>> GetKnessets(CancellationToken ct = default);
+    Task<IList<Knesset>> GetKnessets(CancellationToken ct = default);
+
+    Task<GovernmentRoot> GetGovernmentRoot(int governmentId, CancellationToken ct = default);
 }

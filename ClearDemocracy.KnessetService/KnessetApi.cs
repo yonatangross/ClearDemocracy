@@ -1,9 +1,9 @@
-﻿using ClearDemocracy.KnessetService.Abstractions;
-using ClearDemocracy.KnessetService.Models;
+﻿using ClearDemocracy.KnessetService.Api.Abstractions;
+using ClearDemocracy.KnessetService.Api.Models;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
-namespace ClearDemocracy.KnessetService;
+namespace ClearDemocracy.KnessetService.Api;
 
 public class KnessetApi : IKnessetApi
 {
@@ -71,7 +71,7 @@ public class KnessetApi : IKnessetApi
         }
     }
 
-    public async Task<IList<Models.Knesset>> GetKnessets(CancellationToken ct = default)
+    public async Task<IList<Knesset>> GetKnessets(CancellationToken ct = default)
     {
         var stringUrl = "https://knesset.gov.il/WebSiteApi/knessetapi/Faction/GetFactions?lng=en";
         try
@@ -84,6 +84,33 @@ public class KnessetApi : IKnessetApi
                 var result = JsonSerializer.Deserialize<FactionsRoot>(responseString);
 
                 return result.Knessets;
+            }
+            else
+            {
+                _logger.LogError($"Failed to retrieve data from {stringUrl}. Status code: {response.StatusCode}");
+                return null;
+            }
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError($"An error occurred while retrieving data: {ex.Message}");
+            return null;
+        }
+    }
+
+    public async Task<GovernmentRoot> GetGovernmentRoot(int governmentId, CancellationToken ct = default)
+    {
+        var stringUrl = $"https://www.knesset.gov.il/WebSiteApi/knessetapi/goverment?GovId={governmentId}&Lang=EN";
+        try
+        {
+            var response = await _httpClient.GetAsync(stringUrl, ct);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var responseString = await response.Content.ReadAsStringAsync(ct);
+                var result = JsonSerializer.Deserialize<GovernmentRoot>(responseString);
+
+                return result;
             }
             else
             {

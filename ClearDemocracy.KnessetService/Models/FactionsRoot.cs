@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace ClearDemocracy.KnessetService.Models;
+namespace ClearDemocracy.KnessetService.Api.Models;
 
 public class FactionsRoot
 {

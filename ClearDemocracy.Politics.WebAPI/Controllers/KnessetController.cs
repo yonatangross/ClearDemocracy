@@ -1,6 +1,6 @@
 ﻿using ClearDemocracy.Knesset.BL.Abstractions;
 using ClearDemocracy.KnessetService;
-using ClearDemocracy.KnessetService.Models;
+using ClearDemocracy.KnessetService.Api.Models;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -121,7 +121,7 @@ public class KnessetController : ControllerBase
     }
 
     [HttpGet("knessets")]
-    public async Task<ActionResult<IList<KnessetService.Models.Knesset>>> GetKnessetsAsync(CancellationToken ct)
+    public async Task<ActionResult<IList<KnessetService.Api.Models.Knesset>>> GetKnessetsAsync(CancellationToken ct)
     {
         try
         {
@@ -163,12 +163,26 @@ public class KnessetController : ControllerBase
     }
 
     [HttpGet("knessetsInit")]
-    public async Task<ActionResult<IList<KnessetService.Models.Knesset>>> InitKnessetsAsync(CancellationToken ct)
+    public async Task<ActionResult<IList<KnessetService.Api.Models.Knesset>>> InitKnessetsAsync(CancellationToken ct)
     {
         try
         {
             var knessets = await _knessetModifier.InitKnessets(ct);
             return Ok(knessets);
+        }
+        catch (Exception ex)
+        {
+            return BadRequest(ex.Message);
+        }
+    }
+
+    [HttpGet("governmentInit")]
+    public async Task<ActionResult> InitGovernmentAsync(CancellationToken ct)
+    {
+        try
+        {
+            await _knessetModifier.InitGovernmentRoots(ct);
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -219,7 +233,7 @@ public class KnessetController : ControllerBase
     }
 
     [HttpPost("knessets")]
-    public async Task<ActionResult> AddKnessetsAsync([FromBody] IList<KnessetService.Models.Knesset> knessets, CancellationToken ct)
+    public async Task<ActionResult> AddKnessetsAsync([FromBody] IList<KnessetService.Api.Models.Knesset> knessets, CancellationToken ct)
     {
         try
         {
@@ -233,7 +247,7 @@ public class KnessetController : ControllerBase
     }
 
     [HttpPut("knessets")]
-    public async Task<ActionResult> UpdateKnessetsAsync([FromBody] IList<KnessetService.Models.Knesset> knessets, CancellationToken ct)
+    public async Task<ActionResult> UpdateKnessetsAsync([FromBody] IList<KnessetService.Api.Models.Knesset> knessets, CancellationToken ct)
     {
         try
         {
@@ -259,4 +273,6 @@ public class KnessetController : ControllerBase
             return BadRequest(ex.Message);
         }
     }
+
+
 }

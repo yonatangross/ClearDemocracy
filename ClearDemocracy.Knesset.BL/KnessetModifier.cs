@@ -1,8 +1,10 @@
 ﻿using ClearDemocracy.Knesset.BL.Abstractions;
 using ClearDemocracy.Knesset.Dal;
-using ClearDemocracy.KnessetService.Abstractions;
-using ClearDemocracy.KnessetService.Models;
+using ClearDemocracy.KnessetService.Api.Abstractions;
+using ClearDemocracy.KnessetService.Api.Models;
+using ClearDemocracy.KnessetService.Api.Options;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace ClearDemocracy.Knesset.BL;
 
@@ -10,13 +12,15 @@ public class KnessetModifier : IKnessetModifier
 {
     private readonly IKnessetApi _knessetApi;
     private readonly IPoliticsDal _politicsDal;
+    private readonly QueryOptions _options;
     private readonly ILogger<KnessetModifier> _logger;
 
-    public KnessetModifier(IKnessetApi knessetApi, ILogger<KnessetModifier> logger, IPoliticsDal politicsDal)
+    public KnessetModifier(IKnessetApi knessetApi, ILogger<KnessetModifier> logger, IPoliticsDal politicsDal, IOptions<QueryOptions> options)
     {
         _knessetApi = knessetApi;
         _logger = logger;
         _politicsDal = politicsDal;
+        _options = options.Value;
     }
 
     public async Task<IList<Faction>> InitFactions(CancellationToken ct = default)
@@ -40,7 +44,7 @@ public class KnessetModifier : IKnessetModifier
         }
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> InitKnessets(CancellationToken ct = default)
+    public async Task<IList<KnessetService.Api.Models.Knesset>> InitKnessets(CancellationToken ct = default)
     {
         try
         {
@@ -125,21 +129,6 @@ public class KnessetModifier : IKnessetModifier
         }
     }
 
-    public async Task<IList<Faction>> GetFactions(CancellationToken ct = default)
-    {
-        try
-        {
-            _logger.LogInformation("Retrieving factions from DAL...");
-            var factions = await _politicsDal.GetAllFactions(ct);
-            return factions;
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error occurred while getting factions.");
-            throw;
-        }
-    }
-
     public async Task AddFactionsAsync(IList<Faction> factions, CancellationToken ct = default)
     {
         try
@@ -182,7 +171,7 @@ public class KnessetModifier : IKnessetModifier
         }
     }
 
-    public async Task AddKnessetsAsync(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
+    public async Task AddKnessetsAsync(IList<KnessetService.Api.Models.Knesset> knessets, CancellationToken ct = default)
     {
         try
         {
@@ -196,7 +185,7 @@ public class KnessetModifier : IKnessetModifier
         }
     }
 
-    public async Task UpdateKnessetsAsync(IList<KnessetService.Models.Knesset> knessets, CancellationToken ct = default)
+    public async Task UpdateKnessetsAsync(IList<KnessetService.Api.Models.Knesset> knessets, CancellationToken ct = default)
     {
         try
         {
@@ -224,18 +213,69 @@ public class KnessetModifier : IKnessetModifier
         }
     }
 
-    public async Task<IList<KnessetService.Models.Knesset>> GetKnessets(CancellationToken ct = default)
+    public async Task<GovernmentRoot> InitGovernmentRoots(CancellationToken ct = default)
     {
+
         try
         {
-            _logger.LogInformation("Retrieving Knessets from DAL...");
-            var knessets = await _politicsDal.GetAllKnessets(ct);
-            return knessets;
+            var governmentRoot = await _knessetApi.GetGovernmentRoot(_options.LatestGovernmentId, ct);
+
+            if (governmentRoot == null)
+            {
+                _logger.LogError("Failed to retrieve GovernmentRoots from Knesset API");
+            }
+
+            return governmentRoot;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error occurred while getting Knessets.");
-            throw;
+            _logger.LogError(ex, "An error occurred while initializing GovernmentRoots");
+            throw; // rethrow the exception if you want it to be handled further up the call stack
         }
+    }
+
+    public Task AddGovernmentsAsync(IList<Government> governments, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateGovernmentsAsync(IList<Government> governments, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteGovernmentsAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddMinistersAsync(IList<Minister> ministers, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateMinistersAsync(IList<Minister> ministers, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteMinistersAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task AddMinisterLastPositionsAsync(IList<MinisterLastPosition> ministerLastPositions, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task UpdateMinisterLastPositionsAsync(IList<MinisterLastPosition> ministerLastPositions, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
+    }
+
+    public Task DeleteMinisterLastPositionsAsync(IList<int> ids, CancellationToken ct = default)
+    {
+        throw new NotImplementedException();
     }
 }

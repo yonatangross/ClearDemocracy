@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClearDemocracy.Knesset.Dal.Models;
 
-public partial class Mk
+public partial class mk
 {
     public int MkId { get; set; }
 

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ClearDemocracy.Knesset.Dal.Models;
 
-public partial class Faction
+public partial class faction
 {
     public int Id { get; set; }
 
@@ -13,5 +13,5 @@ public partial class Faction
 
     public bool IsPartial { get; set; }
 
-    public virtual Knesset Knesset { get; set; }
+    public virtual knesset Knesset { get; set; }
 }
