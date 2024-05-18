@@ -45,9 +45,9 @@ public class PoliticsModifier : IPoliticsModifier
         var (governments, ministers) = await _knessetApi.InitGovernmentById(governmentId, ct);
         if (governments != null && ministers != null)
         {
-            await _politicsDal.InitGovernments(governments.Select(ModelConverter.ToDalModel).ToList(), ct);
-            await _politicsDal.InitMinisters(ministers.Select(ModelConverter.ToDalModel).ToList(), ct);
-            return (governments, ministers);
+            var governmentsResult = await _politicsDal.InitGovernments(governments.Select(ModelConverter.ToDalModel).ToList(), ct);
+            //var ministersResult = await _politicsDal.InitMinisters(ministers.Select(ModelConverter.ToDalModel).ToList(), ct);
+            return (governmentsResult, null);
         }
         _logger.LogError($"Failed to initialize government with ID {governmentId}.");
         return (null, null);
@@ -68,67 +68,28 @@ public class PoliticsModifier : IPoliticsModifier
     // Update Methods
     public async Task<Faction> UpdateFaction(Faction faction, CancellationToken ct = default)
     {
-        try
-        {
-            return await _politicsDal.UpdateFaction(faction, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to update faction: {ex.Message}");
-            return null;
-        }
+        return await _politicsDal.UpdateFaction(faction.ToDalModel(), ct);
     }
 
     public async Task<Government> UpdateGovernment(Government government, CancellationToken ct = default)
     {
-        try
-        {
-            return await _politicsDal.UpdateGovernment(government, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to update government: {ex.Message}");
-            return null;
-        }
+        return await _politicsDal.UpdateGovernment(government.ToDalModel(), ct);
+
     }
 
     public async Task<Knesset> UpdateKnesset(Knesset knesset, CancellationToken ct = default)
     {
-        try
-        {
-            return await _politicsDal.UpdateKnesset(knesset, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to update knesset: {ex.Message}");
-            return null;
-        }
+        return await _politicsDal.UpdateKnesset(knesset.ToDalModel(), ct);
     }
 
     public async Task<Minister> UpdateMinister(Minister minister, CancellationToken ct = default)
     {
-        try
-        {
-            return await _politicsDal.UpdateMinister(minister, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to update minister: {ex.Message}");
-            return null;
-        }
+        return await _politicsDal.UpdateMinister(minister.ToDalModel(), ct);
     }
 
     public async Task<Mk> UpdateMk(Mk mk, CancellationToken ct = default)
     {
-        try
-        {
-            return await _politicsDal.UpdateMk(mk, ct);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to update MK: {ex.Message}");
-            return null;
-        }
+        return await _politicsDal.UpdateMk(mk.ToDalModel(), ct);
     }
 
     // Delete Methods

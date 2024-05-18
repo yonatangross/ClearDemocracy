@@ -9,9 +9,9 @@ public interface IPoliticsDal
 {
     // Create Methods
     Task<IList<Faction>> InitFactions(IList<Models.Faction> factions, CancellationToken ct);
-    Task InitGovernments(IList<Models.Government> governments, CancellationToken ct);
+    Task<IList<Government>> InitGovernments(IList<Models.Government> governments, CancellationToken ct);
     Task<IList<Knesset>> InitKnessets(IList<Models.Knesset> knessets, CancellationToken ct);
-    Task InitMinisters(IList<Models.Minister> ministers, CancellationToken ct);
+    Task<IList<Minister>> InitMinisters(IList<Models.Minister> ministers, CancellationToken ct);
     Task<IList<Mk>> InitMks(IList<Models.Mk> mks, CancellationToken ct);
 
     // Read Methods
@@ -22,11 +22,11 @@ public interface IPoliticsDal
     Task<IList<Mk>> GetMks(CancellationToken ct = default);
 
     // Update Methods
-    Task<Faction> UpdateFaction(Faction faction, CancellationToken ct = default);
-    Task<Government> UpdateGovernment(Government government, CancellationToken ct = default);
-    Task<Knesset> UpdateKnesset(Knesset knesset, CancellationToken ct = default);
-    Task<Minister> UpdateMinister(Minister minister, CancellationToken ct = default);
-    Task<Mk> UpdateMk(Mk mk, CancellationToken ct = default);
+    Task<Faction> UpdateFaction(Models.Faction faction, CancellationToken ct = default);
+    Task<Government> UpdateGovernment(Models.Government government, CancellationToken ct = default);
+    Task<Knesset> UpdateKnesset(Models.Knesset knesset, CancellationToken ct = default);
+    Task<Minister> UpdateMinister(Models.Minister minister, CancellationToken ct = default);
+    Task<Mk> UpdateMk(Models.Mk mk, CancellationToken ct = default);
 
     // Delete Methods
     Task<bool> DeleteFaction(int id, CancellationToken ct = default);

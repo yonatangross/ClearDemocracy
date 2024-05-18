@@ -24,42 +24,22 @@ public class PoliticsController : ControllerBase
     [HttpGet("mksInit")]
     public async Task<ActionResult<IList<Mk>>> InitMksAsync(CancellationToken ct = default)
     {
-        try
-        {
-            var mks = await _politicsModifier.InitMkLobbyData(ct);
-            return Ok(mks);
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+
+        var mks = await _politicsModifier.InitMkLobbyData(ct);
+        return Ok(mks);
     }
 
     [HttpGet("factionsAndKnessetsInit")]
     public async Task<ActionResult> InitFactionsAndKnessetsAsync(CancellationToken ct = default)
     {
-        try
-        {
-            var (factions, knessets) = await _politicsModifier.InitFactionsAndKnessets(ct);
-            return Ok(new { factions, knessets });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (factions, knessets) = await _politicsModifier.InitFactionsAndKnessets(ct);
+        return Ok(new { factions, knessets });
     }
 
     [HttpGet("governmentInit/{governmentId}")]
     public async Task<ActionResult> InitGovernmentAsync(int governmentId, CancellationToken ct = default)
     {
-        try
-        {
-            var (governments, ministers) = await _politicsModifier.InitGovernmentById(governmentId, ct);
-            return Ok(new { governments, ministers });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(ex.Message);
-        }
+        var (governments, ministers) = await _politicsModifier.InitGovernmentById(governmentId, ct);
+        return Ok(new { governments, ministers });
     }
 }
