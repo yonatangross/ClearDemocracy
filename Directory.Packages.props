@@ -4,6 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
   </PropertyGroup>
   <ItemGroup>
+    <PackageVersion Include="FluentValidation" Version="11.9.1" />
     <PackageVersion Include="HotChocolate.AspNetCore" Version="13.9.4" />
     <PackageVersion Include="HotChocolate.AspNetCore.Authorization" Version="13.9.4" />
     <PackageVersion Include="HotChocolate.AspNetCore.Voyager" Version="10.5.5" />

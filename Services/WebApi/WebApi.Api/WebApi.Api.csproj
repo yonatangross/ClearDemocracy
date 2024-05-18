@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<UserSecretsId>8b41fc82-3f88-4b68-85d4-9cd8c36da90b</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Swashbuckle.AspNetCore" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Aspire\Aspire.ServiceDefaults\Aspire.ServiceDefaults.csproj" />
+		<ProjectReference Include="..\..\Politics\Politics.Api\Politics.Api.csproj" />
+		<ProjectReference Include="..\..\Politics\Politics.BL.Models\Politics.BL.Models.csproj" />
+		<ProjectReference Include="..\..\Politics\Politics.BL\Politics.BL.csproj" />
+		<ProjectReference Include="..\..\Politics\Politics.Dal\Politics.Dal.csproj" />
+		<ProjectReference Include="..\..\Politics\Politics.WebApi\Politics.WebApi.csproj" />
+	</ItemGroup>
+
+</Project>

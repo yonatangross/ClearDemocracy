@@ -1,25 +1,29 @@
-using KnessetService.Api;
-using KnessetService.Api.DependencyInjections;
-using KnessetService.Api.Options;
-using KnessetService.BL.DependencyInjections;
-using KnessetService.Dal.DependencyInjections;
+using Aspire.ServiceDefaults;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Politics.Api;
+using Politics.Api.DependencyInjections;
+using Politics.Api.Options;
+using Politics.BL.DependencyInjections;
+using Politics.Dal.DependencyInjections;
 
-namespace WebAPI.Api;
+namespace PoliticsService.WebApi;
 
 public class Program
 {
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        builder.AddServiceDefaults();
 
         // Add services to the container.
         ConfigureServiceRegistration(builder.Services, builder.Configuration);
 
         var app = builder.Build();
+
+        app.MapDefaultEndpoints();
 
         // Configure the HTTP request pipeline.
         ConfigureMiddleware(app);
@@ -33,11 +37,11 @@ public class Program
         // Swagger/OpenAPI support
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
-        services.Configure<QueryOptions>(configuration.GetSection("QueryOptions"));
-        services.AddOptions<QueryOptions>();
-        services.AddKnessetDal(configuration);
-        services.AddKnessetBl();
-        services.AddKnessetService();
+        services.Configure<PoliticsQueryOptions>(configuration.GetSection("PoliticsQueryOptions"));
+        services.AddOptions<PoliticsQueryOptions>();
+        services.AddPoliticsDal(configuration);
+        services.AddPoliticsBl();
+        services.AddPoliticsService();
         // HTTP client service for external API calls
         services.AddHttpClient<PoliticsApi>();
 

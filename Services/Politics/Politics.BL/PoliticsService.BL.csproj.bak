@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<ProjectReference Include="..\Politics.Converter\Politics.Dal.csproj" />
+		<ProjectReference Include="..\Politics.BL.Models\Politics.BL.Models.csproj" />
+		
+	</PropertyGroup>
+
+</Project>
