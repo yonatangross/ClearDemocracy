@@ -54,16 +54,31 @@ public class PoliticsApi : IKnessetApi
     private bool ValidateModels<T>(IEnumerable<T> models)
     {
         var validator = _serviceProvider.GetRequiredService<IValidator<T>>();
-        var validationResult = models.Select(validator.Validate).ToList();
+        var validationResults = models.Select(m => new { Model = m, Result = validator.Validate(m) }).ToList();
 
-        if (validationResult.Any(r => !r.IsValid))
+        var failedResults = validationResults.Where(r => !r.Result.IsValid).ToList();
+
+        if (failedResults.Any())
         {
-            _logger.LogError($"Validation failed for {typeof(T).Name}.");
+            _logger.LogError($"Validation failed for {typeof(T).Name}. {failedResults.Count} errors found:");
+
+            foreach (var failed in failedResults)
+            {
+                var modelJson = JsonSerializer.Serialize(failed.Model, new JsonSerializerOptions { WriteIndented = true });
+                _logger.LogError("Validation errors for model: {0}\nModel JSON: {1}", typeof(T).Name, modelJson);
+
+                foreach (var error in failed.Result.Errors)
+                {
+                    _logger.LogError("Property: {PropertyName}, Error: {ErrorMessage}", error.PropertyName, error.ErrorMessage);
+                }
+            }
+
             return false;
         }
 
         return true;
     }
+
 
     public Task<IList<Mk>> InitMkLobbyData(CancellationToken ct = default)
     {
@@ -71,27 +86,19 @@ public class PoliticsApi : IKnessetApi
         {
             var result = await FetchAndValidateData<MKsRoot>("https://knesset.gov.il/WebSiteApi/knessetapi/MkLobby/GetMkLobbyData?lang=en");
             if (result == null || !ValidateModels(result.Mks)) return null;
-            return result.Mks.ToBlModels();
+            return result.ToBlModels();
         });
     }
 
-    public Task<IList<Faction>> InitFactions(CancellationToken ct = default)
+    public Task<(IList<Faction> factions, IList<Knesset> knessets)> InitFactionsAndKnessets(CancellationToken ct = default)
     {
         return ExecuteApiCall(async () =>
         {
             var result = await FetchAndValidateData<FactionsRoot>("https://knesset.gov.il/WebSiteApi/knessetapi/Faction/GetFactions?lng=en");
-            if (result == null || !ValidateModels(result.Factions)) return null;
-            return result.Factions.ToBlModels();
-        });
-    }
-
-    public Task<IList<Knesset>> InitKnessets(CancellationToken ct = default)
-    {
-        return ExecuteApiCall(async () =>
-        {
-            var result = await FetchAndValidateData<FactionsRoot>("https://knesset.gov.il/WebSiteApi/knessetapi/Faction/GetFactions?lng=en");
-            if (result == null || !ValidateModels(result.Knessets)) return null;
-            return result.Knessets.ToBlModels();
+            if (result == null || !ValidateModels(result.Factions) || !ValidateModels(result.Knessets)) return (null, null);
+            var factions = result.Factions.ToBlModels();
+            var knessets = result.Knessets.ToBlModels();
+            return (factions, knessets);
         });
     }
 

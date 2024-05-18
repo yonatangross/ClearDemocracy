@@ -1,77 +1,144 @@
-﻿namespace Politics.Api.Models.Input;
+﻿using FluentValidation;
+using Politics.BL.Models;
+using System.Text.Json.Serialization;
+
+namespace Politics.Api.Models.Input;
 
 public class MinisterLastPositionInput
 {
-    public int ID { get; set; }
-    public int TypeID { get; set; }
-    public int GO_PositionID { get; set; }
-    public int SAN_PositionId { get; set; }
+    [JsonPropertyName("id")]
+    public int Id { get; set; }
+
+    [JsonPropertyName("type_id")]
+    public int TypeId { get; set; }
+
+    [JsonPropertyName("go_position_id")]
+    public int GoPositionId { get; set; }
+
+    [JsonPropertyName("san_position_id")]
+    public int SanPositionId { get; set; }
+
+    [JsonPropertyName("position_name")]
     public string PositionName { get; set; }
+
+    [JsonPropertyName("name")]
     public string Name { get; set; }
+
+    [JsonPropertyName("mk_name")]
     public string MkName { get; set; }
-    public int FK_SanID { get; set; }
+
+    [JsonPropertyName("fk_san_id")]
+    public int FkSanId { get; set; }
+
+    [JsonPropertyName("pos_id")]
     public int PosId { get; set; }
-    public int? faction_id { get; set; }
-    public string FactionName { get; set; }
-    public int knesset { get; set; }
-    public string KnessetName { get; set; }
-    public int GovermentId { get; set; }
-    public string GovermentName { get; set; }
+
+    [JsonPropertyName("faction_id")]
+    public int? FactionId { get; set; }
+
+    [JsonPropertyName("knesset")]
+    public int Knesset { get; set; }
+
+    [JsonPropertyName("government_id")]
+    public int GovernmentId { get; set; }
+
+    [JsonPropertyName("ordinal")]
     public int Ordinal { get; set; }
-    public int Ordinal2 { get; set; }
-    public int OrdinalFirst { get; set; }
+
+    [JsonPropertyName("ministry_id")]
     public int MinistryId { get; set; }
-    public string MinistryName { get; set; }
+
+    [JsonPropertyName("gov_start_date")]
     public DateTime GovStartDate { get; set; }
-    public object GovFinishDate { get; set; }
-    public string GovStartDateStr { get; set; }
-    public string GovStartDateStr2 { get; set; }
-    public object GovFinishDateStr { get; set; }
-    public object GovFinishDateStr2 { get; set; }
-    public DateTime PositionStratDate { get; set; }
-    public object PositionFinishedDate { get; set; }
-    public bool IsMK { get; set; }
-    public int LU_Gender { get; set; }
-    public object Notes { get; set; }
+
+    [JsonPropertyName("gov_finish_date")]
+    public DateTime? GovFinishDate { get; set; }
+
+    [JsonPropertyName("position_start_date")]
+    public DateTime PositionStartDate { get; set; }
+
+    [JsonPropertyName("position_finished_date")]
+    public DateTime? PositionFinishedDate { get; set; }
+
+    [JsonPropertyName("is_mk")]
+    public bool IsMk { get; set; }
+
+    [JsonPropertyName("gender")]
+    public Gender Gender { get; set; }
+
+    [JsonPropertyName("notes")]
+    public string Notes { get; set; }
+
+    [JsonPropertyName("position_id")]
     public int PositionId { get; set; }
-    public int RNK { get; set; }
+
+    [JsonPropertyName("rnk")]
+    public int Rnk { get; set; }
+
+    [JsonPropertyName("pos_group")]
     public int PosGroup { get; set; }
-    public string StartDateStr { get; set; }
-    public object FinishDateStr { get; set; }
-    public int rnk1 { get; set; }
-    public string GovGroups { get; set; }
 }
 
 public static class MinisterLastPositionInputExtensions
 {
-    public static BL.Models.Minister ToBlModel(this MinisterLastPositionInput input)
+    public static Politics.BL.Models.Minister ToBlModel(this MinisterLastPositionInput input)
     {
-        return new BL.Models.Minister
+        return new Politics.BL.Models.Minister
         {
-            Id = input.ID,
-            TypeId = input.TypeID,
-            GoPositionId = input.GO_PositionID,
-            SanPositionId = input.SAN_PositionId,
+            Id = input.Id,
+            TypeId = input.TypeId,
+            GoPositionId = input.GoPositionId,
+            SanPositionId = input.SanPositionId,
             PositionName = input.PositionName,
             Name = input.Name,
             MkName = input.MkName,
-            FkSanId = input.FK_SanID,
+            FkSanId = input.FkSanId,
             PosId = input.PosId,
-            FactionId = input.faction_id,
-            KnessetId = input.knesset,
-            GovernmentId = input.GovermentId,
+            FactionId = input.FactionId,
+            KnessetId = input.Knesset,
+            GovernmentId = input.GovernmentId,
             Ordinal = input.Ordinal,
             MinistryId = input.MinistryId,
             GovStartDate = input.GovStartDate,
             GovFinishDate = input.GovFinishDate as DateTime?,
-            PositionStartDate = input.PositionStratDate,
+            PositionStartDate = input.PositionStartDate,
             PositionFinishedDate = input.PositionFinishedDate as DateTime?,
-            IsMk = input.IsMK,
-            Gender = input.LU_Gender.ToString(),
+            IsMk = input.IsMk,
+            Gender = input.Gender.ToString(),
             Notes = input.Notes?.ToString(),
             PositionId = input.PositionId,
-            Rnk = input.RNK,
+            Rnk = input.Rnk,
             PosGroup = input.PosGroup
         };
     }
 }
+
+public class MinisterLastPositionInputValidator : AbstractValidator<MinisterLastPositionInput>
+{
+    public MinisterLastPositionInputValidator()
+    {
+        RuleFor(m => m.Id).NotEmpty().WithMessage("id is required.");
+        RuleFor(m => m.TypeId).NotEmpty().WithMessage("type_id is required.");
+        RuleFor(m => m.GoPositionId).NotEmpty().WithMessage("go_position_id is required.");
+        RuleFor(m => m.SanPositionId).NotEmpty().WithMessage("san_position_id is required.");
+        RuleFor(m => m.PositionName).NotEmpty().WithMessage("position_name is required.");
+        RuleFor(m => m.Name).NotEmpty().WithMessage("name is required.");
+        RuleFor(m => m.MkName).NotEmpty().WithMessage("mk_name is required.");
+        RuleFor(m => m.FkSanId).NotEmpty().WithMessage("fk_san_id is required.");
+        RuleFor(m => m.PosId).NotEmpty().WithMessage("pos_id is required.");
+        RuleFor(m => m.FactionId).NotNull().WithMessage("faction_id is required.");
+        RuleFor(m => m.Knesset).NotEmpty().WithMessage("knesset is required.");
+        RuleFor(m => m.GovernmentId).NotEmpty().WithMessage("government_id is required.");
+        RuleFor(m => m.Ordinal).NotEmpty().WithMessage("ordinal is required.");
+        RuleFor(m => m.MinistryId).NotEmpty().WithMessage("ministry_id is required.");
+        RuleFor(m => m.GovStartDate).NotEmpty().WithMessage("gov_start_date is required.");
+        RuleFor(m => m.PositionStartDate).NotEmpty().WithMessage("position_start_date is required.");
+        RuleFor(m => m.Gender).IsInEnum().WithMessage("gender is required and must be a valid value.");
+        RuleFor(m => m.PositionId).NotEmpty().WithMessage("position_id is required.");
+        RuleFor(m => m.Rnk).NotEmpty().WithMessage("rnk is required.");
+        RuleFor(m => m.PosGroup).NotEmpty().WithMessage("pos_group is required.");
+    }
+}
+
+
+

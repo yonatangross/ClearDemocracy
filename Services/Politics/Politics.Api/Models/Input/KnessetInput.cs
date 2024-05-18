@@ -1,38 +1,48 @@
 ﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
-namespace Politics.Api.Models.Input
+namespace Politics.Api.Models.Input;
+
+public class KnessetInput
 {
-    public class KnessetInput
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public DateTime FromDate { get; set; }
-        public DateTime? ToDate { get; set; }
-        public bool IsCurrent { get; set; }
-    }
+    [JsonPropertyName("ID")]
+    public int Id { get; set; }
 
-    public static class KnessetInputExtensions
-    {
-        public static BL.Models.Knesset ToBlModel(this KnessetInput input)
-        {
-            return new BL.Models.Knesset
-            {
-                Id = input.ID,
-                Name = input.Name,
-                FromDate = input.FromDate,
-                ToDate = input.ToDate,
-                IsCurrent = input.IsCurrent
-            };
-        }
-    }
+    [JsonPropertyName("Name")]
+    public string Name { get; set; }
 
-    public class KnessetInputValidator : AbstractValidator<KnessetInput>
+    [JsonPropertyName("FromDate")]
+    public DateTime FromDate { get; set; }
+
+    [JsonPropertyName("ToDate")]
+    public DateTime? ToDate { get; set; }
+
+    [JsonPropertyName("IsCurrent")]
+    public bool IsCurrent { get; set; }
+}
+
+public static class KnessetInputExtensions
+{
+    public static BL.Models.Knesset ToBlModel(this KnessetInput input)
     {
-        public KnessetInputValidator()
+        return new BL.Models.Knesset
         {
-            RuleFor(knesset => knesset.Name).NotEmpty().WithMessage("Knesset name is required.");
-            RuleFor(knesset => knesset.FromDate).NotEmpty().WithMessage("From date is required.");
-            // Add other validation rules as needed
-        }
+            Id = input.Id,
+            Name = input.Name,
+            FromDate = input.FromDate,
+            ToDate = input.ToDate,
+            IsCurrent = input.IsCurrent
+        };
+    }
+}
+
+public class KnessetInputValidator : AbstractValidator<KnessetInput>
+{
+    public KnessetInputValidator()
+    {
+        RuleFor(knesset => knesset.Id).GreaterThanOrEqualTo(0).WithMessage("ID is required.");
+        RuleFor(knesset => knesset.Name).NotEmpty().WithMessage("Name is required.");
+        RuleFor(knesset => knesset.FromDate).NotEmpty().WithMessage("FromDate is required.");
+        RuleFor(knesset => knesset.IsCurrent).NotNull().WithMessage("IsCurrent is required.");
     }
 }

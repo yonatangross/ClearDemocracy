@@ -25,15 +25,19 @@ public class PoliticsModifier : IPoliticsModifier
     }
 
     // Create Methods
-    public async Task<IList<Faction>> InitFactions(CancellationToken ct = default)
+    public async Task<(IList<Faction> factions, IList<Knesset> knessets)> InitFactionsAndKnessets(CancellationToken ct = default)
     {
-        var factions = await _knessetApi.InitFactions(ct);
-        if (factions != null)
+        var (factions, knessets) = await _knessetApi.InitFactionsAndKnessets(ct);
+
+        if (factions != null && knessets != null)
         {
-            return await _politicsDal.InitFactions(factions.Select(ModelConverter.ToDalModel).ToList(), ct);
+            await _politicsDal.InitFactions(factions.Select(ModelConverter.ToDalModel).ToList(), ct);
+            await _politicsDal.InitKnessets(knessets.Select(ModelConverter.ToDalModel).ToList(), ct);
+            return (factions, knessets);
         }
-        _logger.LogError("Failed to initialize factions.");
-        return null;
+
+        _logger.LogError("Failed to initialize factions and knessets.");
+        return (null, null);
     }
 
     public async Task<(IList<Government> governments, IList<Minister> ministers)> InitGovernmentById(int governmentId, CancellationToken ct = default)
@@ -49,16 +53,6 @@ public class PoliticsModifier : IPoliticsModifier
         return (null, null);
     }
 
-    public async Task<IList<Knesset>> InitKnessets(CancellationToken ct = default)
-    {
-        var knessets = await _knessetApi.InitKnessets(ct);
-        if (knessets != null)
-        {
-            return await _politicsDal.InitKnessets(knessets.Select(ModelConverter.ToDalModel).ToList(), ct);
-        }
-        _logger.LogError("Failed to initialize knessets.");
-        return null;
-    }
 
     public async Task<IList<Mk>> InitMkLobbyData(CancellationToken ct = default)
     {

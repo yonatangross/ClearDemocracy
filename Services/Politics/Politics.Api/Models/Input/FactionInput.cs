@@ -1,36 +1,44 @@
 ﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
-namespace Politics.Api.Models.Input
+namespace Politics.Api.Models.Input;
+
+public class FactionInput
 {
-    public class FactionInput
-    {
-        public int ID { get; set; }
-        public string Name { get; set; }
-        public int KnessetID { get; set; }
-        public bool IsPartial { get; set; }
-    }
+    [JsonPropertyName("ID")]
+    public int Id { get; set; }
 
-    public static class FactionInputExtensions
-    {
-        public static BL.Models.Faction ToBlModel(this FactionInput input)
-        {
-            return new BL.Models.Faction
-            {
-                Id = input.ID,
-                Name = input.Name,
-                KnessetId = input.KnessetID,
-                IsPartial = input.IsPartial
-            };
-        }
-    }
+    [JsonPropertyName("Name")]
+    public string Name { get; set; }
 
-    public class FactionInputValidator : AbstractValidator<FactionInput>
+    [JsonPropertyName("KnessetID")]
+    public string KnessetId { get; set; }
+
+    [JsonPropertyName("IsPartial")]
+    public bool IsPartial { get; set; }
+}
+
+public static class FactionInputExtensions
+{
+    public static BL.Models.Faction ToBlModel(this FactionInput input)
     {
-        public FactionInputValidator()
+        return new BL.Models.Faction
         {
-            RuleFor(faction => faction.Name).NotEmpty().WithMessage("Faction name is required.");
-            RuleFor(faction => faction.KnessetID).NotEmpty().WithMessage("Knesset ID is required.");
-            // Add other validation rules as needed
-        }
+            Id = input.Id,
+            Name = input.Name,
+            KnessetId = int.Parse(input.KnessetId),
+            IsPartial = input.IsPartial
+        };
+    }
+}
+
+public class FactionInputValidator : AbstractValidator<FactionInput>
+{
+    public FactionInputValidator()
+    {
+        RuleFor(faction => faction.Id).GreaterThanOrEqualTo(0).WithMessage("ID is required.");
+        RuleFor(faction => faction.Name).NotEmpty().WithMessage("Name is required.");
+        RuleFor(faction => int.Parse(faction.KnessetId)).GreaterThanOrEqualTo(0).WithMessage("KnessetID is required.");
+        RuleFor(faction => faction.IsPartial).NotNull().WithMessage("IsPartial is required.");
     }
 }

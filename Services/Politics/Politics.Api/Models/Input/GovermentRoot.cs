@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using FluentValidation;
+using System.Text.Json.Serialization;
 
 namespace Politics.Api.Models.Input;
 
@@ -13,7 +14,10 @@ public class GovernmentRoot
     [JsonPropertyName("GovermentPositionsLast")]
     public List<MinisterLastPositionInput> MinisterLastPositions { get; set; }
 
+    [JsonPropertyName("GovermentDocs")]
     public List<object> GovermentDocs { get; set; }
+
+    [JsonPropertyName("GovermentEmbededVideos")]
     public List<object> GovermentEmbededVideos { get; set; }
 }
 
@@ -40,4 +44,14 @@ public static class GovernmentRootExtensions
     }
 
     // Define the conversion for MinisterLastPositionInput if required
+}
+
+public class GovernmentRootValidator : AbstractValidator<GovernmentRoot>
+{
+    public GovernmentRootValidator()
+    {
+        RuleForEach(g => g.GovermentsNames).SetValidator(new GovernmentInputValidator());
+        RuleForEach(g => g.Ministers).SetValidator(new MinisterInputValidator());
+        RuleForEach(g => g.MinisterLastPositions).SetValidator(new MinisterLastPositionInputValidator());
+    }
 }

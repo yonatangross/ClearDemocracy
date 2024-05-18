@@ -1,20 +1,17 @@
-﻿namespace Politics.Api.Models.Input;
+﻿using System.Text.Json.Serialization;
+
+namespace Politics.Api.Models.Input;
 
 public class MKsRoot
 {
-    [Json]
+    [JsonPropertyName("mks")]
     public IList<MkInput> Mks { get; set; }
 }
 
 public static class MKsRootExtensions
 {
-    public static IList<BL.Models.Mk> ToBlModels(this IList<MkInput> inputs)
+    public static IList<BL.Models.Mk> ToBlModels(this MKsRoot root)
     {
-        var result = new List<BL.Models.Mk>();
-        foreach (var input in inputs)
-        {
-            result.Add(input.ToBlModel());
-        }
-        return result;
+        return root.Mks?.Select(mk => mk.ToBlModel()).ToList();
     }
 }

@@ -13,6 +13,8 @@ public static class DependencyInjectionsExtensions
         services.AddTransient<IValidator<FactionInput>, FactionInputValidator>();
         services.AddTransient<IValidator<KnessetInput>, KnessetInputValidator>();
         services.AddTransient<IValidator<GovernmentInput>, GovernmentInputValidator>();
+        services.AddTransient<IValidator<MinisterInput>, MinisterInputValidator>();
+        services.AddTransient<IValidator<MinisterLastPositionInput>, MinisterLastPositionInputValidator>();
         services.AddSingleton<IKnessetApi, PoliticsApi>();
     }
 }
