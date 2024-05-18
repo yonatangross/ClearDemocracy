@@ -1,0 +1,106 @@
+---- Create knesset table
+--CREATE TABLE `knesset` (
+--  `id` int NOT NULL AUTO_INCREMENT,
+--  `name` varchar(255) NOT NULL,
+--  `from_date` datetime NOT NULL,
+--  `to_date` datetime DEFAULT NULL,
+--  `is_current` tinyint(1) NOT NULL,
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---- Create government table
+--CREATE TABLE `government` (
+--  `gov_id` int NOT NULL AUTO_INCREMENT,
+--  `gov_name` varchar(255) NOT NULL,
+--  `gov_start_date` datetime NOT NULL,
+--  `gov_finish_date` datetime DEFAULT NULL,
+--  `gov_pm_image` varchar(255) DEFAULT NULL,
+--  `gov_banner_image` varchar(255) DEFAULT NULL,
+--  `gov_current` bit(1) NOT NULL,
+--  `searched_gov` bit(1) NOT NULL,
+--  `knesset_names` varchar(255) DEFAULT NULL,
+--  `gov_notes` text,
+--  PRIMARY KEY (`gov_id`)
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---- Create faction table
+--CREATE TABLE `faction` (
+--  `id` int NOT NULL AUTO_INCREMENT,
+--  `name` varchar(255) NOT NULL,
+--  `knesset_id` int NOT NULL,
+--  `is_partial` tinyint(1) NOT NULL,
+--  PRIMARY KEY (`id`),
+--  KEY `knesset_id` (`knesset_id`),
+--  CONSTRAINT `faction_ibfk_1` FOREIGN KEY (`knesset_id`) REFERENCES `knesset` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---- Create mk table
+--CREATE TABLE `mk` (
+--  `mk_id` int NOT NULL AUTO_INCREMENT,
+--  `first_name` varchar(100) DEFAULT NULL,
+--  `last_name` varchar(100) DEFAULT NULL,
+--  `faction_id` int DEFAULT NULL,
+--  `image_path` varchar(255) DEFAULT NULL,
+--  `first_letter` char(1) DEFAULT NULL,
+--  `email` varchar(255) DEFAULT NULL,
+--  `phone` varchar(100) DEFAULT NULL,
+--  `gender` varchar(15) DEFAULT NULL,
+--  `year_date` int DEFAULT NULL,
+--  `fax` varchar(255) DEFAULT NULL,
+--  `facebook` varchar(255) DEFAULT NULL,
+--  `twitter` varchar(255) DEFAULT NULL,
+--  `instagram` varchar(255) DEFAULT NULL,
+--  `youtube` varchar(255) DEFAULT NULL,
+--  `is_present` tinyint(1) DEFAULT NULL,
+--  `is_coalition` tinyint(1) DEFAULT NULL,
+--  `website_url` varchar(255) DEFAULT NULL,
+--  PRIMARY KEY (`mk_id`),
+--  KEY `faction_id` (`faction_id`),
+--  CONSTRAINT `mk_ibfk_1` FOREIGN KEY (`faction_id`) REFERENCES `faction` (`id`) ON DELETE SET NULL ON UPDATE CASCADE
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---- Create sanction table
+--CREATE TABLE `sanction` (
+--  `id` int NOT NULL AUTO_INCREMENT,
+--  `name` varchar(255) NOT NULL,
+--  PRIMARY KEY (`id`)
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+---- Create minister table
+--CREATE TABLE `minister` (
+--  `id` int NOT NULL AUTO_INCREMENT,
+--  `type_id` int NOT NULL,
+--  `go_position_id` int NOT NULL,
+--  `san_position_id` int NOT NULL,
+--  `position_name` varchar(255) NOT NULL,
+--  `name` varchar(255) NOT NULL,
+--  `mk_name` varchar(255) NOT NULL,
+--  `fk_san_id` int NOT NULL,
+--  `pos_id` int NOT NULL,
+--  `faction_id` int DEFAULT NULL,
+--  `knesset_id` int NOT NULL,
+--  `government_id` int NOT NULL,
+--  `ordinal` int NOT NULL,
+--  `ministry_id` int NOT NULL,
+--  `gov_start_date` datetime NOT NULL,
+--  `gov_finish_date` datetime DEFAULT NULL,
+--  `position_start_date` datetime NOT NULL,
+--  `position_finished_date` datetime DEFAULT NULL,
+--  `is_mk` bit(1) NOT NULL,
+--  `gender` varchar(15) NOT NULL,
+--  `notes` text,
+--  `position_id` int NOT NULL,
+--  `rnk` int NOT NULL,
+--  `pos_group` int NOT NULL,
+--  PRIMARY KEY (`id`),
+--  KEY `faction_id` (`faction_id`),
+--  KEY `knesset_id` (`knesset_id`),
+--  KEY `government_id` (`government_id`),
+--  KEY `fk_san_id` (`fk_san_id`),
+--  CONSTRAINT `minister_ibfk_1` FOREIGN KEY (`faction_id`) REFERENCES `faction` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
+--  CONSTRAINT `minister_ibfk_2` FOREIGN KEY (`knesset_id`) REFERENCES `knesset` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+--  CONSTRAINT `minister_ibfk_3` FOREIGN KEY (`government_id`) REFERENCES `government` (`gov_id`) ON DELETE CASCADE ON UPDATE CASCADE,
+--  CONSTRAINT `minister_ibfk_4` FOREIGN KEY (`fk_san_id`) REFERENCES `sanction` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+--) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--dotnet ef dbcontext scaffold "Server=localhost;Port=3307;Database=politics;User=root;Password=yonatan1234;" Pomelo.EntityFrameworkCore.MySql -o Models -c KnessetContext --data-annotations
