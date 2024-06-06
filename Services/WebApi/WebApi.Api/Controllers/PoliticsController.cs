@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Politics.BL.Abstractions;
 using Politics.BL.Models;
-using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PoliticsService.WebApi.Controllers;
+namespace WebApi.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
@@ -41,5 +40,12 @@ public class PoliticsController : ControllerBase
     {
         var (governments, ministers) = await _politicsModifier.InitGovernmentById(governmentId, ct);
         return Ok(new { governments, ministers });
+    }
+
+    [HttpGet("mks")]
+    public async Task<ActionResult<IList<Mk>>> GetMksAsync(CancellationToken ct = default)
+    {
+        var mks = await _politicsRetriever.GetMksAsync(ct);
+        return Ok(mks);
     }
 }

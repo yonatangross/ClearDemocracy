@@ -52,4 +52,7 @@ public class Mk
 
     [StringLength(255)]
     public string WebsiteUrl { get; set; }
+
+    // Navigation property
+    public Faction Faction { get; set; }
 }

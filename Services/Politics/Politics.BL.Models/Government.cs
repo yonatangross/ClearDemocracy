@@ -28,4 +28,7 @@ public class Government
     public string KnessetNames { get; set; }
 
     public string GovNotes { get; set; }
+
+    // Navigation property
+    public ICollection<Minister> Ministers { get; set; }
 }

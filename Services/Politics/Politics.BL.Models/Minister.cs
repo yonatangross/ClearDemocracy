@@ -59,4 +59,9 @@ public class Minister
     public int Rnk { get; set; }
 
     public int PosGroup { get; set; }
+
+    // Navigation properties
+    public Faction Faction { get; set; }
+    public Knesset Knesset { get; set; }
+    public Government Government { get; set; }
 }

@@ -15,4 +15,8 @@ public class Knesset
     public DateTime? ToDate { get; set; }
 
     public bool IsCurrent { get; set; }
+
+    // Navigation properties
+    public ICollection<Faction> Factions { get; set; }
+    public ICollection<Minister> Ministers { get; set; }
 }

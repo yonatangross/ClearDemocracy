@@ -1,10 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using Politics.BL.Models;
 using Politics.Converter;
 using Politics.Dal.Abstractions;
 using Politics.Dal.Context;
-using Politics.Dal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,142 +13,57 @@ namespace Politics.Dal;
 
 public class PoliticsDal : IPoliticsDal
 {
+    private readonly IDbContextFactory<PoliticsContext> _dbContextFactory;
     private readonly ILogger<PoliticsDal> _logger;
 
-    public PoliticsDal(ILogger<PoliticsDal> logger)
+    public PoliticsDal(IDbContextFactory<PoliticsContext> dbContextFactory, ILogger<PoliticsDal> logger)
     {
         _logger = logger;
+        _dbContextFactory = dbContextFactory;
     }
 
     // Create Methods
     public async Task<IList<BL.Models.Faction>> InitFactions(IList<Models.Faction> factions, CancellationToken ct)
     {
-        try
-        {
-            await using var context = new PoliticsContext();
-            foreach (var faction in factions)
-            {
-                if (!context.Factions.Any(f => f.Id == faction.Id))
-                {
-                    context.Factions.Add(faction);
-                }
-                else
-                {
-                    context.Entry(faction).State = EntityState.Modified;
-                }
-            }
-            await context.SaveChangesAsync(ct);
-            return factions.Select(ModelConverter.ToBlModel).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to initialize factions: {ex.Message}");
-            throw;
-        }
+        await using var context = _dbContextFactory.CreateDbContext();
+        await context.Factions.AddRangeAsync(factions);
+        await context.SaveChangesAsync(ct);
+        return factions.Select(ModelConverter.ToBlModel).ToList();
     }
 
     public async Task<IList<BL.Models.Government>> InitGovernments(IList<Models.Government> governments, CancellationToken ct)
     {
-        try
-        {
-            await using var context = new PoliticsContext();
-            foreach (var government in governments)
-            {
-                if (!context.Governments.Any(g => g.GovId == government.GovId))
-                {
-                    context.Governments.Add(government);
-                }
-                else
-                {
-                    context.Entry(government).State = EntityState.Modified;
-                }
-            }
-            await context.SaveChangesAsync(ct);
-            return governments.Select(ModelConverter.ToBlModel).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to initialize governments: {ex.Message}");
-            throw;
-        }
+        await using var context = _dbContextFactory.CreateDbContext();
+        await context.Governments.AddRangeAsync(governments);
+        await context.SaveChangesAsync(ct);
+        return governments.Select(ModelConverter.ToBlModel).ToList();
+
     }
 
     public async Task<IList<BL.Models.Knesset>> InitKnessets(IList<Models.Knesset> knessets, CancellationToken ct)
     {
-        try
-        {
-            await using var context = new PoliticsContext();
-            foreach (var knesset in knessets)
-            {
-                if (!context.Knessets.Any(k => k.Id == knesset.Id))
-                {
-                    context.Knessets.Add(knesset);
-                }
-                else
-                {
-                    context.Entry(knesset).State = EntityState.Modified;
-                }
-            }
-            await context.SaveChangesAsync(ct);
-            return knessets.Select(k => k.ToBlModel()).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to initialize knessets: {ex.Message}");
-            throw;
-        }
+        await using var context = _dbContextFactory.CreateDbContext();
+        await context.Knessets.AddRangeAsync(knessets);
+        await context.SaveChangesAsync(ct);
+        return knessets.Select(k => k.ToBlModel()).ToList();
+
     }
 
     public async Task<IList<BL.Models.Minister>> InitMinisters(IList<Models.Minister> ministers, CancellationToken ct)
     {
-        try
-        {
-            await using var context = new PoliticsContext();
-            foreach (var minister in ministers)
-            {
-                if (!context.Ministers.Any(m => m.Id == minister.Id))
-                {
-                    context.Ministers.Add(minister);
-                }
-                else
-                {
-                    context.Entry(minister).State = EntityState.Modified;
-                }
-            }
-            await context.SaveChangesAsync(ct);
-            return ministers.Select(k => k.ToBlModel()).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to initialize ministers: {ex.Message}");
-            throw;
-        }
+        await using var context = _dbContextFactory.CreateDbContext();
+        await context.Ministers.AddRangeAsync(ministers);
+        await context.SaveChangesAsync(ct);
+        return ministers.Select(k => k.ToBlModel()).ToList();
+
     }
 
     public async Task<IList<BL.Models.Mk>> InitMks(IList<Models.Mk> mks, CancellationToken ct)
     {
-        try
-        {
-            await using var context = new PoliticsContext();
-            foreach (var mk in mks)
-            {
-                if (!context.Mks.Any(m => m.MkId == mk.MkId))
-                {
-                    context.Mks.Add(mk);
-                }
-                else
-                {
-                    context.Entry(mk).State = EntityState.Modified;
-                }
-            }
-            await context.SaveChangesAsync(ct);
-            return mks.Select(m => m.ToBlModel()).ToList();
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError($"Failed to initialize MKs: {ex.Message}");
-            throw;
-        }
+        await using var context = _dbContextFactory.CreateDbContext();
+        await context.AddRangeAsync(mks);
+        await context.SaveChangesAsync(ct);
+        return mks.Select(m => m.ToBlModel()).ToList();
     }
 
     // Read Methods

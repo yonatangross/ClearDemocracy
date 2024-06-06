@@ -10,13 +10,15 @@ public static class DependencyInjectionsExtensions
 {
     public static void AddPoliticsDal(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddDbContext<PoliticsContext>(options =>
+        services.AddDbContextFactory<PoliticsContext>(options =>
         {
-            options.UseMySql(
+            options
+            .EnableSensitiveDataLogging()
+            .EnableDetailedErrors()
+            .UseMySql(
                 configuration.GetConnectionString("politics"),
-                ServerVersion.AutoDetect(configuration.GetConnectionString("politics"))
-            );
-        }, ServiceLifetime.Singleton);
+                ServerVersion.AutoDetect(configuration.GetConnectionString("politics")));
+        });
 
         services.AddSingleton<IPoliticsDal, PoliticsDal>();
     }

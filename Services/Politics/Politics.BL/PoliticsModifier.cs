@@ -46,8 +46,8 @@ public class PoliticsModifier : IPoliticsModifier
         if (governments != null && ministers != null)
         {
             var governmentsResult = await _politicsDal.InitGovernments(governments.Select(ModelConverter.ToDalModel).ToList(), ct);
-            //var ministersResult = await _politicsDal.InitMinisters(ministers.Select(ModelConverter.ToDalModel).ToList(), ct);
-            return (governmentsResult, null);
+            var ministersResult = await _politicsDal.InitMinisters(ministers.Select(ModelConverter.ToDalModel).ToList(), ct);
+            return (governmentsResult, ministersResult);
         }
         _logger.LogError($"Failed to initialize government with ID {governmentId}.");
         return (null, null);

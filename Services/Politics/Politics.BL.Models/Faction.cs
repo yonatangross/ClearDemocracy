@@ -13,4 +13,8 @@ public class Faction
     public int KnessetId { get; set; }
 
     public bool IsPartial { get; set; }
+
+    // Navigation properties
+    public Knesset Knesset { get; set; }
+    public ICollection<Mk> Mks { get; set; }
 }

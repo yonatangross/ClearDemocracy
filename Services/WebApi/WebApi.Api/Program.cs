@@ -9,7 +9,7 @@ using Politics.Api.Options;
 using Politics.BL.DependencyInjections;
 using Politics.Dal.DependencyInjections;
 
-namespace PoliticsService.WebApi;
+namespace WebApi.Api;
 
 public class Program
 {
@@ -50,7 +50,8 @@ public class Program
             options.AddDefaultPolicy(
                 builder => builder.WithOrigins("http://localhost:3000")  // Allowing only a specific origin
                                   .AllowAnyMethod()  // Allows all methods
-                                  .AllowAnyHeader()); // Allows all headers
+                                  .AllowAnyHeader()  // Allows all headers
+                                  .AllowCredentials()); // Allow credentials
         });
     }
 
@@ -66,8 +67,8 @@ public class Program
         // Redirection to HTTPS
         app.UseHttpsRedirection();
 
-        // UseRouting is now implicit in .NET 6+
         // CORS should be configured after routing but before authorization and endpoints
+        app.UseRouting();
         app.UseCors();
 
         // Use Authentication and Authorization
